@@ -10,7 +10,6 @@ COPY src ./src
 
 ENV HONEYPOT_DB_PATH=/data/honeypots.sqlite
 RUN mkdir -p /data
-VOLUME ["/data"]
 
 CMD ["bun", "run", "src/bot.ts"]
 
