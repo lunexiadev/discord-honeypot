@@ -14,20 +14,30 @@ const honeypots = new Set<string>();
 for (const row of db.query("select id from honeypots").all() as { id: string }[]) {
 	honeypots.add(row.id);
 }
-const topicText = "Honeypot channel. Messages here trigger an automatic ban.";
-const disclaimer = "This is a honeypot channel. Do not post here unless you want to be banned.";
+const topicText = "Questo canale è un honeypot, se invii un messaggio verrai bannato..";
+const disclaimer = "NON SCRIVERE QUI. SE MANDI UN MESSAGGIO IN QUESTO CANALE VERRAI BANNATO AUTOMATICAMENTE DAL SERVER.
+
+🤖 Cos'è questo canale?
+Questo è un canale honeypot monitorato da un bot di sicurezza. È progettato per intercettare e bannare istantaneamente i bot di spam, i self-bot e i flamer che usano script automatizzati per inviare messaggi di massa nei canali visibili.
+
+👥 Sei un utente reale?
+NON DIGITARE NULLA. Non mandare emoji, non testare comandi, non scrivere "ciao".
+
+Se scrivi, il bot non farà distinzioni: verrai scambiato per un bot di spam e il ban sarà immediato e permanente.
+
+Cosa fare: Chiudi semplicemente questa chat e torna nei canali normali del server..";
 
 const adminPerms = PermissionsBitField.Flags.Administrator;
 
 const commands = [
 	{
 		name: "sethoneypot",
-		description: "Designate a channel as a honeypot",
+		description: "Aggiungi un canale alla lista dell'honeypot",
 		default_member_permissions: adminPerms.toString(),
 		options: [
 			{
 				name: "channel",
-				description: "Text channel to mark",
+				description: "Canale testuale da marcare",
 				type: 7,
 				channel_types: [ChannelType.GuildText],
 				required: true,
@@ -36,12 +46,12 @@ const commands = [
 	},
 	{
 		name: "removehoneypot",
-		description: "Remove a channel from honeypot list",
+		description: "Rimuovi un canale dalla lista dell'honeypot",
 		default_member_permissions: adminPerms.toString(),
 		options: [
 			{
 				name: "channel",
-				description: "Text channel to unmark",
+				description: "Canale testuale da marcare",
 				type: 7,
 				channel_types: [ChannelType.GuildText],
 				required: true,
@@ -121,13 +131,13 @@ client.on("interactionCreate", async (interaction) => {
 
 	if (interaction.commandName === "sethoneypot") {
 		await markHoneypot(channel);
-		await interaction.reply({ content: `${channel} is now a honeypot.`, flags: MessageFlags.Ephemeral });
+		await interaction.reply({ content: `${channel} Ora fa parte della lista dell'honeypot.`, flags: MessageFlags.Ephemeral });
 		return;
 	}
 
 	if (interaction.commandName === "removehoneypot") {
 		await unmarkHoneypot(channel);
-		await interaction.reply({ content: `${channel} removed from honeypots.`, flags: MessageFlags.Ephemeral });
+		await interaction.reply({ content: `${channel} Rimosso dalla lista dell'honeypot.`, flags: MessageFlags.Ephemeral });
 	}
 });
 
@@ -163,9 +173,9 @@ client.on("guildCreate", async (guild) => {
 		await dm
 			?.send(
 				[
-					`Thanks for adding Honeypot to ${guild.name}.`,
-					`Move the bot's highest role above everyone it should ban. Drag its role to the top (below owner).`,
-					`Admin doesn't bypass hierarchy; bot role must outrank targets and keep Ban Members.`,
+					`Grazie per aver aggiunto il bot al server ${guild.name}.`,
+					`Sposta il ruolo del bot sotto il ruolo del founder.`,
+					`L'admin non bypassa la gerarchia, il bot serve a bannare e limitare i messaggi dei bot.`,
 				].join(" "),
 			)
 			.catch((error) => {
