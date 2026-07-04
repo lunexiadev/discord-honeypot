@@ -15,17 +15,19 @@ for (const row of db.query("select id from honeypots").all() as { id: string }[]
 	honeypots.add(row.id);
 }
 const topicText = "Questo canale è un honeypot, se invii un messaggio verrai bannato..";
-const disclaimer = "NON SCRIVERE QUI. SE MANDI UN MESSAGGIO IN QUESTO CANALE VERRAI BANNATO AUTOMATICAMENTE DAL SERVER.
-
-🤖 Cos'è questo canale?
-Questo è un canale honeypot monitorato da un bot di sicurezza. È progettato per intercettare e bannare istantaneamente i bot di spam, i self-bot e i flamer che usano script automatizzati per inviare messaggi di massa nei canali visibili.
-
-👥 Sei un utente reale?
-NON DIGITARE NULLA. Non mandare emoji, non testare comandi, non scrivere "ciao".
-
-Se scrivi, il bot non farà distinzioni: verrai scambiato per un bot di spam e il ban sarà immediato e permanente.
-
-Cosa fare: Chiudi semplicemente questa chat e torna nei canali normali del server..";
+const disclaimer = [
+  "⚠️ **NON SCRIVERE QUI. SE MANDI UN MESSAGGIO IN QUESTO CANALE VERRAI BANNATO AUTOMATICAMENTE DAL SERVER.**",
+  "",
+  "🤖 **Cos'è questo canale?**",
+  "Questo è un canale honeypot monitorato da un bot di sicurezza. È progettato per intercettare e bannare istantaneamente i bot di spam, i self-bot e i flamer che usano script automatizzati per inviare messaggi di massa nei canali visibili.",
+  "",
+  "👥 **Sei un utente reale?**",
+  "NON DIGITARE NULLA. Non mandare emoji, non testare comandi, non scrivere 'ciao'.",
+  "",
+  "Se scrivi, il bot non farà distinzioni: verrai scambiato per un bot di spam e il ban sarà immediato e permanente.",
+  "",
+  "Cosa fare: Chiudi semplicemente questa chat e torna nei canali normali del server.."
+].join("\n");
 
 const adminPerms = PermissionsBitField.Flags.Administrator;
 
