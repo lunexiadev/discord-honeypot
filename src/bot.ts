@@ -236,13 +236,19 @@ client.on("messageCreate", async (message) => {
 
 			if (logChannel && logChannel.isTextBased()) {
 				const embed = new EmbedBuilder()
-					.setTitle("🚨 Intervento Honeypot: Utente Bannato")
-					.setColor(0xff0000)
-					.setDescription(`L'utente ${target.user.toString()} (\`${target.id}\`) è caduto nella trappola.`)
+					.setAuthor({ 
+						name: `Utente Bannato | ${target.user.tag}`, 
+						iconURL: target.user.displayAvatarURL() 
+					})
+					.setColor(0xff0000) // Colore rosso
+					.setThumbnail(target.user.displayAvatarURL({ size: 256 })) // Mostra l'avatar dell'utente grande sulla destra
+					.setDescription("Un utente è caduto nella trappola honeypot ed è stato rimosso dal server.")
 					.addFields(
-						{ name: "Motivazione", value: "Spamming/Scamming vari" },
-						{ name: "Canale attivato", value: `<#${message.channel.id}>` }
+						{ name: "👤 Utente", value: `${target.user.toString()}\n(\`${target.id}\`)`, inline: true },
+						{ name: "🛑 Motivazione", value: "l'account è stato hackerato", inline: true },
+						{ name: "📍 Canale", value: `<#${message.channel.id}>`, inline: false }
 					)
+					.setFooter({ text: "Sistema Sicurezza Honeypot" })
 					.setTimestamp();
 
 				await logChannel.send({ embeds: [embed] }).catch((error) => {
