@@ -193,6 +193,11 @@ client.on("messageCreate", async (message) => {
 
 	if (message.channel.type !== ChannelType.GuildText) return;
 
+	// Cancella subito il messaggio inviato nel canale honeypot
+	await message.delete().catch((error) => {
+		console.error("Error deleting honeypot message:", error);
+	});
+
 	const me = message.guild.members.me;
 	if (!me) return;
 
