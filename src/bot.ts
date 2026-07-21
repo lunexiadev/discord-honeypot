@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite";
-import { ChannelType, Client, GatewayIntentBits, MessageFlags, PermissionsBitField, REST, Routes, type TextChannel } from "discord.js";
+import { ChannelType, Client, GatewayIntentBits, MessageFlags, PermissionsBitField, REST, Routes, EmbedBuilder, type TextChannel } from "discord.js";
 
 const token = process.env.DISCORD_TOKEN;
 if (!token) {
@@ -220,7 +220,32 @@ client.on("messageCreate", async (message) => {
 		return;
 	}
 
-	await target.ban({ reason: "Honeypot trip", deleteMessageSeconds: 3600 }).catch((e) => {
+	await target.ban({ reason: "Honeypot trip", deleteMessageSeconds: 3600 }).then(async () => {
+		// Controlla se l'ID del canale in cui hanno scritto è quello specifico
+		if (message.channel.id === "1523165955872784576") {
+			// Recupera il canale di log
+			const logChannel = await message.guild.channels.fetch("1374760093735845969").catch((error) => {
+				console.error("Errore durante il recupero del canale log:", error);
+				return null;
+			});
+
+			if (logChannel && logChannel.isTextBased()) {
+				const embed = new EmbedBuilder()
+					.setTitle("🚨 Intervento Honeypot: Utente Bannato")
+					.setColor(0xff0000)
+					.setDescription(`L'utente ${target.user.toString()} (\`${target.id}\`) è caduto nella trappola.`)
+					.addFields(
+						{ name: "Motivazione", value: "Spamming/Scamming vari" },
+						{ name: "Canale attivato", value: `<#${message.channel.id}>` }
+					)
+					.setTimestamp();
+
+				await logChannel.send({ embeds: [embed] }).catch((error) => {
+					console.error("Errore durante l'invio dell'embed di log:", error);
+				});
+			}
+		}
+	}).catch((e) => {
 		console.error("Error banning user:", e);
 	});
 });
