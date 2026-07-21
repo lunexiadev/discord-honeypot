@@ -236,7 +236,7 @@ client.on("messageCreate", async (message) => {
 
 			if (logChannel && logChannel.isTextBased()) {
 				// Utilizza il tag/mention dell'utente con lo stile richiesto
-				const messaggioSanzione = `${target.user.toString()} | ❌ permaban dal server. questo account è stato hackerato`;
+				const messaggioSanzione = `${target.user.toString()} | ❌ Permaban dal server. Questo account è stato hackerato`;
 
 				await logChannel.send({ content: messaggioSanzione }).catch((error) => {
 					console.error("Errore durante l'invio del log:", error);
