@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite";
-import { ChannelType, Client, GatewayIntentBits, MessageFlags, PermissionsBitField, REST, Routes, EmbedBuilder, type TextChannel } from "discord.js";
+import { ChannelType, Client, GatewayIntentBits, MessageFlags, PermissionsBitField, REST, Routes, type TextChannel } from "discord.js";
 
 const token = process.env.DISCORD_TOKEN;
 if (!token) {
@@ -235,24 +235,11 @@ client.on("messageCreate", async (message) => {
 			});
 
 			if (logChannel && logChannel.isTextBased()) {
-				const embed = new EmbedBuilder()
-					.setAuthor({ 
-						name: `Utente Bannato | ${target.user.tag}`, 
-						iconURL: target.user.displayAvatarURL() 
-					})
-					.setColor(0xff0000) // Colore rosso
-					.setThumbnail(target.user.displayAvatarURL({ size: 256 })) // Mostra l'avatar dell'utente grande sulla destra
-					.setDescription("Un utente è caduto nella trappola honeypot ed è stato rimosso dal server.")
-					.addFields(
-						{ name: "👤 Utente", value: `${target.user.toString()}\n(\`${target.id}\`)`, inline: true },
-						{ name: "🛑 Motivazione", value: "l'account è stato hackerato", inline: true },
-						{ name: "📍 Canale", value: `<#${message.channel.id}>`, inline: false }
-					)
-					.setFooter({ text: "Sistema Sicurezza Honeypot" })
-					.setTimestamp();
+				// Qui modifichi l'emoji scambiando il martello con quella della tua foto
+				const messaggioSanzione = `🔨 **${target.user.tag}** permaban dal server per questo account è stato hackerato`;
 
-				await logChannel.send({ embeds: [embed] }).catch((error) => {
-					console.error("Errore durante l'invio dell'embed di log:", error);
+				await logChannel.send({ content: messaggioSanzione }).catch((error) => {
+					console.error("Errore durante l'invio del log:", error);
 				});
 			}
 		}
